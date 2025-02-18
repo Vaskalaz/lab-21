@@ -1,10 +1,91 @@
 #include <windows.h>
+#include <cstdio>
 
 /* This is where all the input to the window goes to */
+char inputSaved1[100];
+char inputSaved2[100];
+HWND textfield,inputBox1,inputBox2,plusButton,minusButton,multiplyButton,divideButton;
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch(Message) {
 		
 		/* Upon destruction, tell the main thread to stop */
+		case WM_CREATE: {
+			textfield = CreateWindow("STATIC","Please input two numbers",
+			                        WS_VISIBLE | WS_CHILD | WS_BORDER,
+								    10, 10, 210, 30,
+									hwnd, NULL, NULL, NULL);
+			inputBox1 = CreateWindow("EDIT","",
+				                    WS_VISIBLE | WS_CHILD | WS_BORDER,
+				                    35, 45, 160, 30,
+				                    hwnd, NULL, NULL, NULL);
+			inputBox2 = CreateWindow("EDIT","",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									35, 80, 160, 30,
+									hwnd, NULL, NULL, NULL);
+			plusButton = CreateWindow("BUTTON","+",
+				                    WS_VISIBLE | WS_CHILD | WS_BORDER,
+								    40, 120, 30, 30,
+								    hwnd, (HMENU) 1, NULL, NULL);
+			minusButton = CreateWindow("BUTTON","-",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									80, 120, 30, 30,
+									hwnd, (HMENU) 2, NULL, NULL);
+			multiplyButton = CreateWindow("BUTTON","*",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									120, 120, 30, 30,
+									hwnd, (HMENU) 3, NULL, NULL);
+			divideButton = CreateWindow("BUTTON","/",
+									WS_VISIBLE | WS_CHILD | WS_BORDER,
+									160, 120, 30, 30,
+									hwnd, (HMENU) 4, NULL, NULL);
+			break;
+		}
+
+        case WM_COMMAND: {
+			switch (LOWORD(wParam))
+			{
+			    case 1:{
+                    long double i1,i2;
+				    i1 = GetWindowText(inputBox1, &inputSaved1[0], 20);
+					i2 = GetWindowText(inputBox2, &inputSaved2[0], 20);
+					char answer[100];
+					sprintf(answer, "%f", atof(inputSaved1)+atof(inputSaved2));
+				    ::MessageBox(hwnd, answer, "Result",MB_OK);
+				    break;
+				}
+				case 2:{
+                    long double i1,i2;
+				    i1 = GetWindowText(inputBox1, &inputSaved1[0], 20);
+					i2 = GetWindowText(inputBox2, &inputSaved2[0], 20);
+					char answer[100];
+					sprintf(answer, "%f", atof(inputSaved1)-atof(inputSaved2));
+				    ::MessageBox(hwnd, answer, "Result",MB_OK);
+				    break;
+				}
+				case 3:{
+                    long double i1,i2;
+				    i1 = GetWindowText(inputBox1, &inputSaved1[0], 20);
+					i2 = GetWindowText(inputBox2, &inputSaved2[0], 20);
+					char answer[100];
+					sprintf(answer, "%f", atof(inputSaved1)*atof(inputSaved2));
+				    ::MessageBox(hwnd, answer, "Result",MB_OK);
+				    break;
+				}
+				case 4:{
+                    long double i1,i2;
+				    i1 = GetWindowText(inputBox1, &inputSaved1[0], 20);
+					i2 = GetWindowText(inputBox2, &inputSaved2[0], 20);
+					char answer[100];
+					sprintf(answer, "%f", atof(inputSaved1)/atof(inputSaved2));
+				    ::MessageBox(hwnd, answer, "Result",MB_OK);
+				    break;
+				}
+				
+			}
+
+			break;
+		}
+
 		case WM_DESTROY: {
 			PostQuitMessage(0);
 			break;
@@ -31,7 +112,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hCursor	 = LoadCursor(NULL, IDC_ARROW);
 	
 	/* White, COLOR_WINDOW is just a #define for a system color, try Ctrl+Clicking it */
-	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+9);
 	wc.lpszClassName = "WindowClass";
 	wc.hIcon	 = LoadIcon(NULL, IDI_APPLICATION); /* Load a standard icon */
 	wc.hIconSm	 = LoadIcon(NULL, IDI_APPLICATION); /* use the name "A" to use the project icon */
@@ -41,11 +122,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 
-	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","Caption",WS_VISIBLE|WS_OVERLAPPEDWINDOW,
+	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","My Calculator",WS_VISIBLE|WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, /* x */
 		CW_USEDEFAULT, /* y */
-		640, /* width */
-		480, /* height */
+		250, /* width */
+		200, /* height */
 		NULL,NULL,hInstance,NULL);
 
 	if(hwnd == NULL) {
