@@ -1,2 +1,2 @@
-# NAME:Thanaphat
-# STUDENT ID:Wongchan
+# NAME:Thanaphat Wongchan
+# STUDENT ID:670610700
